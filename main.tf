@@ -42,6 +42,12 @@ resource "aws_nat_gateway" "nat" {
  depends_on = [aws_internet_gateway.igw]
 }
 
+resource "aws_route" "public_internet_access" {
+ route_table_id = aws_route_table.rt.id
+ destination_cidr_block = "0.0.0.0/0"
+ gateway_id = aws_internet_gateway.igw.id
+}
+
 #SECURITY GROUPS
 #WEB TIER
 
@@ -102,14 +108,14 @@ resource "aws_launch_template" "web_lt" {
     associate_public_ip_address = true
     security_groups = [ aws_security_group.web_sg.id]
 }
-  user_data = base64encode(<<-EOF
-              #!/bin/bash
-              yum update -y
-              yum install -y httpd
-              systemctl enable httpd
-              systemctl start httpd
-              echo "<h1>Welcome to auto scaling web tier</h1>"> /var/www/html/index.html
-              EOF
+user_data = base64encode(<<-EOF
+#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl enable httpd
+systemctl start httpd
+echo "<h1>Welcome to auto scaling web tier</h1>"> /var/www/html/index.html
+EOF
 )
 }
 #Auto scaling group:

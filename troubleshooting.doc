@@ -1,0 +1,48 @@
+1.While run the DNS got error like site cant be reached ?
+
+Solution :
+
+1.Check ALB health check 
+EC2-target group-web tg
+
+==> while checking it shows unhealthy 2 , I have 2 EC2 both shows unhealthy 
+
+==> checked port 80 and 22 was enabeled
+
+==>Tried to connect EC2 but got error like "Error establishing connection between SSH" 
+
+==> Checked if the public IP is configured or not 
+
+==> Checked subnet under route table assocatian it is associated with VPC but not associated with IGW so added that one 
+
+
+2) Now am able to conncet Ec2 but still the dns shows bad gateway ?
+
+Reason: web server not installed ( curl http://localhost) 
+
+==> while run this curl command it shows connection refused that means web server not installed 
+
+Solution : 
+
+==> Installed nginx by using below command 
+
+i) sudo yum install nginx (that is also shows error and show below command to install)
+
+ii)sudo amazon-linux-extras install nginx
+
+iii) sudo systemctl enable nginx
+
+iv) sudo systemctl start nginx 
+
+If i run the curl command now it shows some data 
+
+Then tried with dns url it will work
+
+
+3) I have already userdata and it contains httpd web server details ?
+
+Reason : May be syntax issue 
+
+Solution : Correct the syntax 
+
+
